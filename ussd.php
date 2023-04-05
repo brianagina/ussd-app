@@ -2,7 +2,7 @@
 // include "dbConnect.php";
 
 
-// Reads the variables sent via POST from our gateway
+// Reads the variables sent via POST from the gateway
 
 $sessionId = $_POST["sessionId"];
 $serviceCode = $_POST["serviceCode"];
@@ -53,11 +53,29 @@ if (isset($text))
 
     /*** Level 0 **/
 
+    /* The PV, Farmer name and total amount to be passed as variables */
     if ($text == '')
     {
-
-        $response = "CON Welcome to ODM Membership Portal \n\n";
-        $response .= "1. Become a member \n";
-        $response .= "2. Cancel Menu \n";
+        $response = "CON Dear FARMER, please review the Payment Voucher with code 7383 of KSH 2000.00. Please reply back with 1 to accept and 2 to reject. \n\n";
+        $response .= "1. Accept \n";
+        $response .= "2. Reject \n";
     }
+
+    /*** Level 1 **/
+
+    if (isset($level[0]) && $level[0] == 1 && !isset($level[1]))
+    {
+        $response = "END Thanks for choosing Rex Mercury. \n";
+    }
+
+    if (isset($level[0]) && $level[0] == 2 && !isset($level[1]))
+    {
+        $response = "END Thanks for choosing Rex Mercury. \n";
+    }
+
+    // Level 2 
+    /*if (isset($level[0]) && isset($level[1]) && $level[1] == 2 && !isset($level[2]))
+    {
+        $response = "END Thanks for choosing Rex Mercury. \n";
+    } */
 }
