@@ -1,81 +1,35 @@
 <?php
-// include "dbConnect.php";
-
-
-// Reads the variables sent via POST from the gateway
-
-$sessionId = $_POST["sessionId"];
+// Read the variables sent via POST from our API
+$sessionId   = $_POST["sessionId"];
 $serviceCode = $_POST["serviceCode"];
-$phoneNumber = '' . substr($_POST["phoneNumber"], 4);
-$text = $_POST["text"];
+$phoneNumber = $_POST["phoneNumber"];
+$text        = $_POST["text"];
 
-if (strpos($text, '*') !== false)
-    $level = explode('*', $text);
-else $level[0] = $text;
+if ($text == "") {
+    // This is the first request. Note how we start the response with CON
+    $response  = "CON CON Dear FARMER, please review the Payment Voucher with code 7383 of KSH 2000.00. Please reply back with 1 to accept and 2 to reject. \n";
+    $response .= "1. Accept \n";
+    $response .= "2. Reject";
 
-if (isset($text))
-{
-    $arrCount = count($level);
-    $arrCount -= 1;
+} else if ($text == "1") {
+    // Business logic for first level response
+    $response = "CON Choose account information you want to view \n";
+    $response .= "1. Account number \n";
 
-    if (isset($level[0]) && $level[0] != '' && $level[$arrCount] == 98 && strlen($text) > 1)
-    {
-        //$lastAsteric = strrpos($text,"*");
-        $lastAsteric = strpos($text, "*98");
-        $text = substr($text, 0, $lastAsteric);
-        $lastAsteric = strrpos($text, "*");
-        $text = substr($text, 0, $lastAsteric);
+} else if ($text == "2") {
+    // Business logic for first level response
+    // This is a terminal request. Note how we start the response with END
+    $response = "END Your phone number is ".$phoneNumber;
 
-        $level = explode('*', $text);
-    }
+} else if($text == "1*1") { 
+    // This is a second level response where the user selected 1 in the first instance
+    $accountNumber  = "ACC1001";
 
+    // This is a terminal request. Note how we start the response with END
+    $response = "END Your account number is ".$accountNumber;
 
-    if (strpos($text, '*0') !== false)
-    {
-        // check any occurence of 0 (back)
-
-        $lastAsteric = $firstOccurence = strpos($text, "*0"); //GET THE FIRST OCCURRENCE *99 AND REPLACE THE PRECCEDING CHARACTER before *
-        $firstPart = substr($text, 0, $lastAsteric);
-        $lastAsteric = strrpos($firstPart, "*");//get value following the *99 and remove it
-        $firstPart = substr($text, 0, $lastAsteric);
-        $text = $firstPart . substr($text, $firstOccurence);
-        $text = str_replace("*0", "", $text);
-
-        if (substr($text, 0, 1) == '*')
-        {
-            // if it starts with * remove it
-            $text = substr($text, 1);
-        }
-
-        $level = explode('*', $text);
-        $response = "END Code Error $text";
-    }
-
-    /*** Level 0 **/
-
-    /* The PV, Farmer name and total amount to be passed as variables */
-    if ($text == '')
-    {
-        $response = "CON Dear FARMER, please review the Payment Voucher with code 7383 of KSH 2000.00. Please reply back with 1 to accept and 2 to reject. \n\n";
-        $response .= "1. Accept \n";
-        $response .= "2. Reject \n";
-    }
-
-    /*** Level 1 **/
-
-    if (isset($level[0]) && $level[0] == 1 && !isset($level[1]))
-    {
-        $response = "END Thanks for choosing Rex Mercury. \n";
-    }
-
-    if (isset($level[0]) && $level[0] == 2 && !isset($level[1]))
-    {
-        $response = "END Thanks for choosing Rex Mercury. \n";
-    }
-
-    // Level 2 
-    /*if (isset($level[0]) && isset($level[1]) && $level[1] == 2 && !isset($level[2]))
-    {
-        $response = "END Thanks for choosing Rex Mercury. \n";
-    } */
 }
+
+// Echo the response back to the API
+header('Content-type: text/plain');
+echo $response;
