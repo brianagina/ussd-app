@@ -13,23 +13,16 @@ if ($text == "") {
 
 } else if ($text == "1") {
     // Business logic for first level response
-    $response = "CON Choose account information you want to view \n";
-    $response .= "1. Account number \n";
+    $response = "END Thanks for choosing Rex Mercury. \n";
 
 } else if ($text == "2") {
     // Business logic for first level response
     // This is a terminal request. Note how we start the response with END
-    $response = "END Your phone number is ".$phoneNumber;
+    $response = "END Thanks for choosing Rex Mercury. \n";
 
-} else if($text == "1*1") { 
-    // This is a second level response where the user selected 1 in the first instance
-    $accountNumber  = "ACC1001";
-
-    // This is a terminal request. Note how we start the response with END
-    $response = "END Your account number is ".$accountNumber;
-
-}
+} 
 
 // Echo the response back to the API
-header('Content-type: text/plain');
+// header('Content-type: text/plain');
 echo $response;
+?>
