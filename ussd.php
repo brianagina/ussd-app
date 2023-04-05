@@ -7,7 +7,7 @@ $text        = $_POST["text"];
 
 if ($text == "") {
     // This is the first request. Note how we start the response with CON
-    $response  = "CON CON Dear FARMER, please review the Payment Voucher with code 7383 of KSH 2000.00. Please reply back with 1 to accept and 2 to reject. \n";
+    $response  = "CON Dear FARMER, please review the Payment Voucher with code 7383 of KSH 2000.00. Please reply back with 1 to accept and 2 to reject. \n";
     $response .= "1. Accept \n";
     $response .= "2. Reject";
 
